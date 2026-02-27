@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber Password Gen</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -15,11 +15,10 @@
             background-color: #0a0a0b;
             font-family: 'Courier New', Courier, monospace;
             color: #00ff41;
-            overflow: hidden;
         }
         .container {
             width: 320px;
-            padding: 25px;
+            padding: 30px;
             border: 1px solid #00ff41;
             border-radius: 15px;
             background: rgba(0, 255, 65, 0.05);
@@ -30,54 +29,54 @@
             width: 100%;
             height: 60px;
             background: #000;
-            border: 1px solid rgba(0, 255, 65, 0.3);
+            border: 1px solid rgba(0, 255, 65, 0.4);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.1rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             cursor: pointer;
-            word-break: break-all;
+            overflow: hidden;
         }
+        /* BARRA DI FORZA */
         .strength-container {
             width: 100%;
             height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
+            background: #222;
+            margin-bottom: 25px;
             border-radius: 2px;
         }
         #strength-bar {
             width: 50%;
             height: 100%;
             background: #ff3b30;
-            box-shadow: 0 0 10px #ff3b30;
-            transition: width 0.3s, background 0.3s;
+            transition: 0.3s;
         }
-        .controls { margin-bottom: 20px; text-align: left; }
+        .controls { text-align: left; margin-bottom: 20px; }
         label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px; }
         input[type="range"] { width: 100%; accent-color: #00ff41; cursor: pointer; }
         button {
             width: 100%;
             padding: 15px;
-            background: transparent;
-            color: #00ff41;
-            border: 1px solid #00ff41;
+            background: #00ff41;
+            color: #0a0a0b;
+            border: none;
             border-radius: 8px;
             font-weight: bold;
             text-transform: uppercase;
             cursor: pointer;
             font-family: inherit;
         }
-        button:active { transform: scale(0.98); background: rgba(0, 255, 65, 0.1); }
+        button:active { transform: scale(0.95); opacity: 0.8; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 20px;">SYSTEM: ACTIVE</div>
+        <div style="font-size: 0.7rem; margin-bottom: 20px; opacity: 0.7;">ENCRYPTION UNIT</div>
         
-        <div id="password-display">CLICCA ESEGUI</div>
+        <div id="password-display" onclick="copyToClipboard()">GENERA</div>
 
         <div class="strength-container">
             <div id="strength-bar"></div>
@@ -88,64 +87,74 @@
                 <span>LUNGHEZZA</span>
                 <span id="length-val">16</span>
             </label>
-            <input type="range" id="length-slider" min="6" max="32" value="16">
+            <input type="range" id="length-slider" min="6" max="32" value="16" oninput="updateUI()">
         </div>
 
-        <button id="gen-btn">Esegui Protocollo</button>
-        <div style="font-size: 0.6rem; margin-top: 15px; opacity: 0.5;">TAP PER COPIARE</div>
+        <button onclick="generate()">Esegui Protocollo</button>
+        <div style="font-size: 0.6rem; margin-top: 15px; opacity: 0.4;">CLICCA SUL CODICE PER COPIARE</div>
     </div>
 
     <script>
-        // ASPETTA CHE IL DOM SIA CARICATO
-        document.addEventListener('DOMContentLoaded', () => {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-            const display = document.getElementById('password-display');
+        const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        
+        // 1. Aggiorna la barra e il testo mentre muovi lo slider
+        function updateUI() {
             const slider = document.getElementById('length-slider');
-            const lengthVal = document.getElementById('length-val');
-            const strengthBar = document.getElementById('strength-bar');
-            const genBtn = document.getElementById('gen-btn');
+            const val = slider.value;
+            document.getElementById('length-val').innerText = val;
+            
+            const bar = document.getElementById('strength-bar');
+            const percent = (val / 32) * 100;
+            bar.style.width = percent + "%";
 
-            // Funzione aggiornamento UI
-            function updateUI() {
-                const val = slider.value;
-                lengthVal.innerText = val;
-                const percent = (val / 32) * 100;
-                strengthBar.style.width = percent + "%";
+            // Colore barra
+            if (val < 10) bar.style.backgroundColor = "#ff3b30"; // Rosso
+            else if (val < 18) bar.style.backgroundColor = "#ff9f0a"; // Arancio
+            else bar.style.backgroundColor = "#00ff41"; // Verde
+        }
 
-                if (val < 10) {
-                    strengthBar.style.background = "#ff3b30";
-                    strengthBar.style.boxShadow = "0 0 10px #ff3b30";
-                } else if (val < 18) {
-                    strengthBar.style.background = "#ff9f0a";
-                    strengthBar.style.boxShadow = "0 0 10px #ff9f0a";
-                } else {
-                    strengthBar.style.background = "#00ff41";
-                    strengthBar.style.boxShadow = "0 0 10px #00ff41";
-                }
+        // 2. Genera la password con animazione
+        function generate() {
+            const length = document.getElementById('length-slider').value;
+            const display = document.getElementById('password-display');
+            
+            // Creiamo la password finale "vera"
+            let finalPass = "";
+            for (let i = 0; i < length; i++) {
+                finalPass += charset.charAt(Math.floor(Math.random() * charset.length));
             }
 
-            // Event Listeners
-            slider.addEventListener('input', updateUI);
-            
-            display.addEventListener('click', () => {
-                const text = display.innerText;
-                if (text === "CLICCA ESEGUI" || text === "COPIATA!") return;
-                navigator.clipboard.writeText(text);
+            // Effetto Scramble
+            let step = 0;
+            const timer = setInterval(() => {
+                display.innerText = finalPass
+                    .split("")
+                    .map((char, index) => {
+                        if (index < step) return char; // Carattere giusto
+                        return charset.charAt(Math.floor(Math.random() * charset.length)); // Carattere a caso
+                    })
+                    .join("");
+
+                if (step >= length) clearInterval(timer);
+                step += 0.5;
+            }, 30);
+        }
+
+        // 3. Copia negli appunti
+        function copyToClipboard() {
+            const display = document.getElementById('password-display');
+            const text = display.innerText;
+            if (text === "GENERA" || text === "COPIATA!") return;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = text;
                 display.innerText = "COPIATA!";
-                setTimeout(() => { display.innerText = text; }, 1000);
+                setTimeout(() => { display.innerText = originalText; }, 1000);
             });
+        }
 
-            genBtn.addEventListener('click', () => {
-                const length = parseInt(slider.value);
-                let finalPassword = "";
-                for (let i = 0; i < length; i++) {
-                    finalPassword += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-
-                let iterations = 0;
-                const interval = setInterval(() => {
-                    display.innerText = finalPassword
-                        .split("")
-                        .map((char, index) => {
-                            if (index < iterations) return finalPassword[index];
-                            return chars.charAt(Math.floor(Math.random() *
+        // Inizializza subito la barra al caricamento
+        updateUI();
+    </script>
+</body>
+</html>
