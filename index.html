@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cyber Password Gen</title>
+    <style>
+        /* 1. VIBE VISIVA: DARK & NEON */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0a0a0b;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            color: #00ff41; /* Verde Matrix classico */
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            border: 1px solid #00ff41;
+            border-radius: 15px;
+            background: rgba(0, 255, 65, 0.05);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        /* 2. IL DISPLAY DELLA PASSWORD */
+        #password-display {
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            word-break: break-all;
+            padding: 0 10px;
+        }
+
+        #password-display:hover {
+            border-color: #00ff41;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
+        }
+
+        /* 3. CONTROLLI (Bottoni e Slider) */
+        .controls {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #00ff41;
+            background: #1a1a1c;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #00ff41;
+            color: #0a0a0b;
+            box-shadow: 0 0 15px #00ff41;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .hint {
+            font-size: 0.7rem;
+            margin-top: 15px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>System Access</h1>
+        
+        <div id="password-display" onclick="copyPassword()">
+            CLICCA GENERA
+        </div>
+
+        <div class="controls">
+            <label id="length-label">Lunghezza: 16</label>
+            <input type="range" id="length-slider" min="8" max="32" value="16" oninput="updateLabel()">
+        </div>
+
+        <button onclick="generateCyber()">Genera Password</button>
+        
+        <div class="hint">Clicca sulla password per copiarla</div>
+    </div>
+
+    <script>
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        const display = document.getElementById('password-display');
+        const slider = document.getElementById('length-slider');
+        const label = document.getElementById('length-label');
+
+        function updateLabel() {
+            label.innerText = `Lunghezza: ${slider.value}`;
+        }
+
+        function copyPassword() {
+            const text = display.innerText;
+            if (text === "CLICCA GENERA" || text === "COPIATA!") return;
+            
+            navigator.clipboard.writeText(text);
+            const original = text;
+            display.innerText = "COPIATA!";
+            display.style.color = "#ffffff";
+            
+            setTimeout(() => {
+                display.innerText = original;
+                display.style.color = "#00ff41";
+            }, 1000);
+        }
+
+        // --- L'EFFETTO CYBER SCRAMBLE ---
+        function generateCyber() {
+            const length = slider.value;
+            let finalPassword = "";
+            
+            // Creiamo la password finale
+            for (let i = 0; i < length; i++) {
+                finalPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            let iterations = 0;
+            const maxIterations = 10;
+            
+            // Animazione dei caratteri che ruotano
+            const interval = setInterval(() => {
+                display.innerText = finalPassword
+                    .split("")
+                    .map((char, index) => {
+                        if (index < iterations) return finalPassword[index];
+                        return chars.charAt(Math.floor(Math.random() * chars.length));
+                    })
+                    .join("");
+
+                if (iterations >= length) {
+                    clearInterval(interval);
+                }
+                
+                iterations += 0.5; // Velocità della "decifrazione"
+            }, 30);
+        }
+    </script>
+</body>
+</html>
