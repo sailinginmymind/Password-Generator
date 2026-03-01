@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 4.6</title>
+    <title>Vibe Password Gen 4.7 Professional</title>
     <style>
-        /* [TUTTI GLI STILI PRECEDENTI MANTENUTI] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -199,25 +198,36 @@
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         let hasGenerated = false;
 
-        // --- SISTEMA AUDIO WEB API ---
+        // --- SISTEMA AUDIO WEB API PROFESSIONAL ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        function playBeep(freq = 150, duration = 0.1) {
+        function playProfessionalSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
+            const now = audioCtx.currentTime;
 
-            osc.type = 'square'; // Suono stile retro hacker
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(freq + 100, audioCtx.currentTime + duration);
-
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            if (type === 'generate') {
+                // Suono profondo (Sine) - Tech Thump
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(120, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.2);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.2);
+            } else {
+                // Suono copia (Triangle) - Crystal Chirp
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(1000, now + 0.05);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.05);
+            }
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            osc.stop(now + 0.2);
         }
         
         const feedbackMessages = {
@@ -272,11 +282,7 @@
         }
 
         function generate() {
-            // Sblocca il contesto audio per Mobile
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            playBeep(200, 0.15); // Esegue il bip hacker
+            playProfessionalSound('generate');
 
             hasGenerated = true;
             const container = document.getElementById('main-container');
@@ -310,7 +316,7 @@
             const text = display.innerText;
             if (text === "GENERA" || text === "COPIATA!") return;
             
-            playBeep(400, 0.05); // Bip più alto per la copia
+            playProfessionalSound('copy');
 
             navigator.clipboard.writeText(text).then(() => {
                 const currentFontSize = display.style.fontSize;
@@ -323,9 +329,6 @@
                 }, 1000);
             });
         }
-
-            // [RIGA AGGIUNTA PER IL VOLUME SU MOBILE]
-            // Alcuni browser mobile richiedono che l'audio sia abilitato dopo un primo tocco.
 
         updateUI();
     </script>
