@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Password Gen 4.1</title>
+    <title>Vibe Password Gen 4.2</title>
     <style>
-        /* [MANTENUTI TUTTI GLI STILI PRECEDENTI] */
+        /* [STILI MANTENUTI INVARIATI] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         @keyframes titleGlitch {
             0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
@@ -81,7 +81,7 @@
             text-transform: uppercase;
             margin-bottom: 35px;
             letter-spacing: 1px;
-            min-height: 2.5em; /* Aumentato per frasi lunghe */
+            min-height: 2.5em;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,7 +141,7 @@
             <div id="strength-bar"></div>
         </div>
         
-        <div id="crack-time">Analisi del firewall in corso...</div>
+        <div id="crack-time">In attesa di input...</div>
 
         <div class="controls">
             <label>
@@ -151,14 +151,13 @@
             <input type="range" id="length-slider" min="6" max="32" value="16" oninput="updateUI()">
         </div>
 
-        <button onclick="generate()">Esegui Protocollo</button>
-        <div style="font-size: 0.75rem; margin-top: 25px; opacity: 0.6; color: #fff;">CLICCA SUL CODICE PER COPIARE</div>
+        <button onclick="generate()">genera</button>
+        <div style="font-size: 0.75rem; margin-top: 25px; opacity: 0.6; color: #fff; letter-spacing: 1px;">CLICCA PER COPIARE</div>
     </div>
 
     <script>
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         
-        // --- NUOVO SISTEMA DI FRASI VARIEGATE ---
         const feedbackMessages = {
             weak: [
                 "Livello: Imbarazzante. Un tostapane la indovinerebbe.",
@@ -197,11 +196,9 @@
             const display = document.getElementById('password-display');
             document.getElementById('length-val').innerText = val;
             
-            // Riempimento slider
             const percentage = ((val - slider.min) / (slider.max - slider.min)) * 100;
             slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
 
-            // Font dinamico
             if (val > 24) display.style.fontSize = "0.95rem";
             else if (val > 18) display.style.fontSize = "1.1rem";
             else display.style.fontSize = "1.3rem";
@@ -222,7 +219,6 @@
             bar.style.backgroundColor = color;
             bar.style.boxShadow = `0 0 10px ${color}`;
             
-            // Applica la frase casuale
             crackText.innerText = getRandomMessage(type);
             crackText.style.color = color;
             crackText.style.textShadow = `0 0 5px ${color}`;
