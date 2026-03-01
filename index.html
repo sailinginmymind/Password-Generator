@@ -2,11 +2,26 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Password Gen 4.2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vibe Password Gen 4.3</title>
     <style>
-        /* [STILI MANTENUTI INVARIATI] */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        /* RESET E FIX BANDA BIANCA MOBILE */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100vh; /* Fallback per browser vecchi */
+            height: 100dvh; /* Altezza dinamica reale per mobile */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Blocca scroll accidentali */
+        }
+
         @keyframes titleGlitch {
             0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
             95% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; opacity: 1; }
@@ -15,26 +30,27 @@
             98% { text-shadow: 0 0 10px #00ff41; opacity: 0.9; transform: skewX(0deg); }
             100% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
         }
+
         body {
-            margin: 0;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             background: radial-gradient(circle at center, #0d1a10 0%, #050505 70%);
             font-family: 'Courier New', Courier, monospace;
             color: #00ff41;
-            overflow: hidden;
         }
+
         .container {
-            width: 380px;
-            padding: 40px 30px;
+            width: 90%;
+            max-width: 380px;
+            padding: 40px 25px;
             border: 2px solid #00ff41;
             border-radius: 20px;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.1);
             text-align: center;
         }
+
         .header-title {
             font-size: 2.2rem;
             letter-spacing: -1px;
@@ -42,9 +58,10 @@
             font-weight: 900;
             text-transform: uppercase;
             color: #fff;
-            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
             animation: titleGlitch 5s infinite;
         }
+
         #password-display {
             width: 100%;
             height: 80px;
@@ -63,6 +80,7 @@
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             transition: all 0.2s ease;
         }
+
         .strength-container {
             width: 100%;
             height: 6px;
@@ -71,11 +89,13 @@
             border-radius: 3px;
             overflow: hidden;
         }
+
         #strength-bar {
             width: 50%;
             height: 100%;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         #crack-time {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -86,7 +106,9 @@
             align-items: center;
             justify-content: center;
         }
+
         .controls { text-align: left; margin-bottom: 30px; }
+        
         label { 
             display: flex; 
             justify-content: space-between; 
@@ -95,9 +117,10 @@
             font-weight: bold;
             color: rgba(255, 255, 255, 0.9);
         }
+
         input[type="range"] { 
             width: 100%; 
-            height: 8px;
+            height: 10px;
             background: #1a1a1a; 
             border-radius: 10px;
             appearance: none;
@@ -105,15 +128,17 @@
             margin: 15px 0;
             cursor: pointer;
         }
+
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             background: #fff;
             border: 3px solid #00ff41;
             border-radius: 50%;
             box-shadow: 0 0 15px #00ff41;
         }
+
         button {
             width: 100%;
             padding: 20px;
@@ -127,6 +152,16 @@
             cursor: pointer;
             box-shadow: 0 4px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
             transition: all 0.1s;
+        }
+
+        button:active { transform: translateY(2px); box-shadow: 0 2px 0 #008f25; }
+
+        .hint {
+            font-size: 0.75rem; 
+            margin-top: 25px; 
+            opacity: 0.6; 
+            color: #fff; 
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -152,7 +187,7 @@
         </div>
 
         <button onclick="generate()">genera</button>
-        <div style="font-size: 0.75rem; margin-top: 25px; opacity: 0.6; color: #fff; letter-spacing: 1px;">CLICCA PER COPIARE</div>
+        <div class="hint">CLICCA PER COPIARE</div>
     </div>
 
     <script>
