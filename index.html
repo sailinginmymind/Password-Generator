@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 1.6.0</title>
+    <title>Vibe Password Gen 1.6.1</title>
     <style>
         * { 
             box-sizing: border-box; 
@@ -54,9 +54,9 @@
         .pulse-active { animation: pulseGlow 0.6s ease-out; }
 
         .header-title {
-            font-size: 2rem;
+            font-size: 2.2rem; /* Ripristinato dimensione */
             letter-spacing: -1px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 900;
             text-transform: uppercase;
             color: #fff;
@@ -66,7 +66,7 @@
 
         #password-display {
             width: 100%;
-            height: 70px;
+            height: 75px;
             background: #000;
             border: 2px solid rgba(0, 255, 65, 0.6);
             border-radius: 12px;
@@ -88,7 +88,7 @@
             width: 100%;
             height: 6px;
             background: #1a1a1a;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-radius: 3px;
             overflow: hidden;
         }
@@ -100,9 +100,9 @@
         }
 
         #crack-time {
-            font-size: 0.65rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             letter-spacing: 1px;
             min-height: 2.5em;
             display: flex;
@@ -114,15 +114,15 @@
 
         .controls { text-align: left; }
         
-        .control-group { margin-bottom: 20px; }
+        .control-group { margin-bottom: 25px; }
 
         label { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         input[type="range"] { 
@@ -138,71 +138,77 @@
 
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             background: #fff;
             border: 3px solid #00ff41;
             border-radius: 50%;
             box-shadow: 0 0 10px #00ff41;
         }
 
-        /* STILE FLAG CARATTERI */
+        /* GRIGLIA OPZIONI CENTRATA */
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         .option-item {
             display: flex;
             align-items: center;
+            justify-content: center; /* Centra il contenuto orizzontalmente */
             background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px 5px;
+            border-radius: 10px;
             border: 1px solid rgba(0, 255, 65, 0.2);
             cursor: pointer;
             transition: all 0.2s;
+            text-align: center; /* Centra il testo */
         }
 
         .option-item.active {
-            background: rgba(0, 255, 65, 0.1);
+            background: rgba(0, 255, 65, 0.12);
             border-color: #00ff41;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 12px rgba(0, 255, 65, 0.15);
         }
 
         .option-item input { display: none; }
 
         .option-label {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            pointer-events: none;
         }
 
-        .active .option-label { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
+        .active .option-label { 
+            color: #00ff41; 
+            text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); 
+        }
 
         button {
             width: 100%;
-            padding: 18px;
+            padding: 20px;
             background: #00ff41;
             color: #000;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 900;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 4px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
+            box-shadow: 0 4px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.4);
             transition: all 0.1s;
         }
 
         button:active { transform: translateY(2px); box-shadow: 0 2px 0 #008f25; }
 
         .hint {
-            font-size: 0.7rem; 
-            margin-top: 20px; 
+            font-size: 0.75rem; 
+            margin-top: 25px; 
             opacity: 0.5; 
             color: #fff; 
             letter-spacing: 1px;
@@ -212,7 +218,7 @@
 <body>
 
     <div class="container" id="main-container">
-        <div class="header-title">Vibe Pass</div>
+        <div class="header-title">Vibe Password</div>
         
         <div id="password-display" onclick="copyToClipboard()">GENERA</div>
 
@@ -278,7 +284,7 @@
             if (document.getElementById('opt-lower').checked) active += charsets.lower;
             if (document.getElementById('opt-numbers').checked) active += charsets.numbers;
             if (document.getElementById('opt-symbols').checked) active += charsets.symbols;
-            return active || charsets.lower; // Default se tutto è deselezionato
+            return active || charsets.lower;
         }
         
         const feedbackMessages = {
@@ -300,10 +306,9 @@
             const percentage = ((val - slider.min) / (slider.max - slider.min)) * 100;
             slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
 
-            if (val > 24) display.style.fontSize = "0.9rem";
-            else display.style.fontSize = "1.2rem";
+            if (val > 24) display.style.fontSize = "0.95rem";
+            else display.style.fontSize = "1.25rem";
 
-            // Calcolo forza basato su lunghezza e varietà
             const activeCount = [
                 document.getElementById('opt-upper').checked,
                 document.getElementById('opt-lower').checked,
@@ -315,8 +320,8 @@
             const strengthPercent = Math.min((score / 45) * 100, 100);
             bar.style.width = strengthPercent + "%";
 
-            let type = "";
             let color = "";
+            let type = "";
             
             if (strengthPercent < 30) { type = "weak"; color = "#ff3b30"; } 
             else if (strengthPercent < 60) { type = "medium"; color = "#ffcc00"; } 
@@ -324,13 +329,13 @@
             else { type = "unbreakable"; color = "#00ff41"; } 
             
             bar.style.backgroundColor = color;
-            bar.style.boxShadow = `0 0 10px ${color}`;
+            bar.style.boxShadow = `0 0 12px ${color}`;
             
             if (hasGenerated) {
                 crackText.style.opacity = "1";
-                crackText.innerText = feedbackMessages[type][0]; // Prende il primo feedback
+                crackText.innerText = feedbackMessages[type][0];
                 crackText.style.color = color;
-                crackText.style.textShadow = `0 0 5px ${color}`;
+                crackText.style.textShadow = `0 0 8px ${color}`;
             }
         }
 
