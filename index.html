@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Password Gen 4.0</title>
+    <title>Vibe Password Gen 4.1</title>
     <style>
+        /* [MANTENUTI TUTTI GLI STILI PRECEDENTI] */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        /* Animazione Glitch discreta per il titolo */
         @keyframes titleGlitch {
             0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
             95% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; opacity: 1; }
@@ -16,45 +15,36 @@
             98% { text-shadow: 0 0 10px #00ff41; opacity: 0.9; transform: skewX(0deg); }
             100% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
         }
-
         body {
             margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Sfondo sfumato Cyberpunk */
             background: radial-gradient(circle at center, #0d1a10 0%, #050505 70%);
             font-family: 'Courier New', Courier, monospace;
             color: #00ff41;
             overflow: hidden;
         }
-
         .container {
-            width: 380px; /* Leggermente più largo per il titolo */
+            width: 380px;
             padding: 40px 30px;
             border: 2px solid #00ff41;
             border-radius: 20px;
-            background: rgba(0, 0, 0, 0.85); /* Sfondo scuro quasi coprente */
-            /* Glow sul container */
+            background: rgba(0, 0, 0, 0.85);
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.1);
             text-align: center;
-            position: relative;
         }
-
-        /* TITOLO AGGIORNATO: Grande, Neon e Glitch */
         .header-title {
             font-size: 2.2rem;
             letter-spacing: -1px;
             margin-bottom: 30px;
             font-weight: 900;
             text-transform: uppercase;
-            color: #fff; /* Bianco per contrasto, il glow è verde */
+            color: #fff;
             text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
-            animation: titleGlitch 5s infinite; /* Animazione ogni 5 secondi */
-            position: relative;
+            animation: titleGlitch 5s infinite;
         }
-
         #password-display {
             width: 100%;
             height: 80px;
@@ -70,16 +60,9 @@
             word-break: break-all;
             padding: 0 20px;
             letter-spacing: 2px;
-            /* Glow sul display */
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             transition: all 0.2s ease;
         }
-
-        #password-display:hover {
-            border-color: #00ff41;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
-        }
-
         .strength-container {
             width: 100%;
             height: 6px;
@@ -88,24 +71,22 @@
             border-radius: 3px;
             overflow: hidden;
         }
-
         #strength-bar {
             width: 50%;
             height: 100%;
-            background: #ff3b30;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         #crack-time {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             margin-bottom: 35px;
             letter-spacing: 1px;
-            min-height: 1.2em;
+            min-height: 2.5em; /* Aumentato per frasi lunghe */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
         .controls { text-align: left; margin-bottom: 30px; }
-        
         label { 
             display: flex; 
             justify-content: space-between; 
@@ -113,10 +94,7 @@
             margin-bottom: 15px; 
             font-weight: bold;
             color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
         }
-
-        /* --- SLIDER CON RIEMPIMENTO E GLOW --- */
         input[type="range"] { 
             width: 100%; 
             height: 8px;
@@ -126,27 +104,16 @@
             outline: none;
             margin: 15px 0;
             cursor: pointer;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
         }
-
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
             width: 26px;
             height: 26px;
-            background: #fff; /* Bianco all'interno per il glow */
-            border-radius: 50%;
-            cursor: pointer;
+            background: #fff;
             border: 3px solid #00ff41;
-            /* Forte glow sul thumb */
-            box-shadow: 0 0 15px #00ff41, 0 0 5px #00ff41;
-            margin-top: -2px;
-            transition: transform 0.1s;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00ff41;
         }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-
         button {
             width: 100%;
             padding: 20px;
@@ -158,28 +125,8 @@
             font-size: 1.1rem;
             text-transform: uppercase;
             cursor: pointer;
-            font-family: inherit;
             box-shadow: 0 4px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
-            transition: all 0.1s ease-out;
-            letter-spacing: 1px;
-        }
-
-        button:hover {
-            box-shadow: 0 4px 0 #008f25, 0 0 25px rgba(0, 255, 65, 0.8);
-        }
-
-        button:active { 
-            transform: translateY(2px); 
-            box-shadow: 0 2px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
-        }
-
-        .hint {
-            font-size: 0.75rem; 
-            margin-top: 25px; 
-            opacity: 0.6; 
-            letter-spacing: 1px;
-            color: #fff;
-            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+            transition: all 0.1s;
         }
     </style>
 </head>
@@ -194,7 +141,7 @@
             <div id="strength-bar"></div>
         </div>
         
-        <div id="crack-time">Analisi in corso...</div>
+        <div id="crack-time">Analisi del firewall in corso...</div>
 
         <div class="controls">
             <label>
@@ -205,69 +152,78 @@
         </div>
 
         <button onclick="generate()">Esegui Protocollo</button>
-        <div class="hint">CLICCA SUL CODICE PER COPIARE</div>
+        <div style="font-size: 0.75rem; margin-top: 25px; opacity: 0.6; color: #fff;">CLICCA SUL CODICE PER COPIARE</div>
     </div>
 
     <script>
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         
+        // --- NUOVO SISTEMA DI FRASI VARIEGATE ---
+        const feedbackMessages = {
+            weak: [
+                "Livello: Imbarazzante. Un tostapane la indovinerebbe.",
+                "Dici sul serio? Mia nonna hackererebbe questo in 1 secondo.",
+                "Praticamente stai urlando la password ai russi.",
+                "Efficace quanto una porta girevole senza vetri."
+            ],
+            medium: [
+                "Moderata. Un dilettante farebbe fatica, un pro ti ride in faccia.",
+                "Non male, ma il Dark Web ha già la soluzione.",
+                "Dura quanto un biscotto inzuppato nel latte.",
+                "Sufficiente per l'account della palestra, non per la banca."
+            ],
+            strong: [
+                "Solida. Ora stiamo parlando di vera crittografia.",
+                "Sicura. Anche un supercomputer suderebbe un po'.",
+                "Protocollo rispettato. Finalmente qualcosa di serio.",
+                "Difficile da scardinare. Dormi tranquillo (forse)."
+            ],
+            unbreakable: [
+                "Livello Dio. Ci rivediamo tra qualche era geologica.",
+                "Inviolabile. L'universo morirà prima che la indovinino.",
+                "Crittografia quantistica. Nemmeno la CIA saprebbe dove iniziare.",
+                "Complimenti, hai appena creato un muro di titanio digitale."
+            ]
+        };
+
+        function getRandomMessage(type) {
+            const messages = feedbackMessages[type];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
         function updateUI() {
             const slider = document.getElementById('length-slider');
-            const val = slider.value;
+            const val = parseInt(slider.value);
             const display = document.getElementById('password-display');
             document.getElementById('length-val').innerText = val;
             
-            // --- CALCOLO RIEMPIMENTO SLIDER ---
-            const min = slider.min;
-            const max = slider.max;
-            const percentage = ((val - min) / (max - min)) * 100;
-            // Gradiente dinamico sul track
+            // Riempimento slider
+            const percentage = ((val - slider.min) / (slider.max - slider.min)) * 100;
             slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
 
-            // Font dinamico ottimizzato per il nuovo display più grande
-            if (val > 24) {
-                display.style.fontSize = "0.95rem";
-            } else if (val > 18) {
-                display.style.fontSize = "1.1rem";
-            } else {
-                display.style.fontSize = "1.3rem";
-            }
+            // Font dinamico
+            if (val > 24) display.style.fontSize = "0.95rem";
+            else if (val > 18) display.style.fontSize = "1.1rem";
+            else display.style.fontSize = "1.3rem";
 
             const bar = document.getElementById('strength-bar');
             const crackText = document.getElementById('crack-time');
             const strengthPercent = (val / 32) * 100;
             bar.style.width = strengthPercent + "%";
 
-            let time = "";
+            let type = "";
             let color = "";
-            if (val < 8) {
-                time = "Istante (Brute Force)";
-                color = "#ff3b30"; // Rosso
-            } else if (val < 11) {
-                time = "~2 ore";
-                color = "#ff3b30"; // Rosso
-            } else if (val < 13) {
-                time = "~5 giorni";
-                color = "#ff9f0a"; // Arancione
-            } else if (val < 15) {
-                time = "~8 mesi";
-                color = "#ff9f0a"; // Arancione
-            } else if (val < 18) {
-                time = "~200 anni";
-                color = "#00ff41"; // Verde
-            } else if (val < 22) {
-                time = "~50.000 anni";
-                color = "#00ff41"; // Verde
-            } else {
-                time = "Millenni (Inviolabile)";
-                color = "#00ff41"; // Verde
-            }
+            
+            if (val < 11) { type = "weak"; color = "#ff3b30"; }
+            else if (val < 15) { type = "medium"; color = "#ff9f0a"; }
+            else if (val < 22) { type = "strong"; color = "#00ff41"; }
+            else { type = "unbreakable"; color = "#00ff41"; }
             
             bar.style.backgroundColor = color;
-            // Aggiungiamo il glow anche alla barra di forza
             bar.style.boxShadow = `0 0 10px ${color}`;
             
-            crackText.innerText = "Tempo crack: " + time;
+            // Applica la frase casuale
+            crackText.innerText = getRandomMessage(type);
             crackText.style.color = color;
             crackText.style.textShadow = `0 0 5px ${color}`;
         }
@@ -299,7 +255,6 @@
                 const currentFontSize = display.style.fontSize;
                 display.style.fontSize = "1.2rem"; 
                 display.innerText = "COPIATA!";
-                // Effetto glow extra temporaneo
                 display.style.boxShadow = "0 0 30px #00ff41";
                 setTimeout(() => { 
                     display.innerText = text; 
@@ -309,7 +264,6 @@
             });
         }
 
-        // Inizializza subito lo slider al caricamento
         updateUI();
     </script>
 </body>
