@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 1.5.0</title>
+    <title>Vibe Password Gen 1.6.0</title>
     <style>
         * { 
             box-sizing: border-box; 
@@ -42,7 +42,7 @@
         .container {
             width: 90%;
             max-width: 380px;
-            padding: 40px 25px;
+            padding: 30px 25px;
             border: 2px solid #00ff41;
             border-radius: 20px;
             background: rgba(0, 0, 0, 0.9);
@@ -54,9 +54,9 @@
         .pulse-active { animation: pulseGlow 0.6s ease-out; }
 
         .header-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
             letter-spacing: -1px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 900;
             text-transform: uppercase;
             color: #fff;
@@ -66,7 +66,7 @@
 
         #password-display {
             width: 100%;
-            height: 80px;
+            height: 70px;
             background: #000;
             border: 2px solid rgba(0, 255, 65, 0.6);
             border-radius: 12px;
@@ -77,17 +77,18 @@
             cursor: pointer;
             overflow: hidden;
             word-break: break-all;
-            padding: 0 20px;
+            padding: 0 15px;
             letter-spacing: 2px;
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             transition: all 0.2s ease;
+            font-weight: bold;
         }
 
         .strength-container {
             width: 100%;
             height: 6px;
             background: #1a1a1a;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             border-radius: 3px;
             overflow: hidden;
         }
@@ -99,9 +100,9 @@
         }
 
         #crack-time {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
             min-height: 2.5em;
             display: flex;
@@ -111,41 +112,80 @@
             transition: opacity 0.5s ease;
         }
 
-        .controls { text-align: left; margin-bottom: 30px; }
+        .controls { text-align: left; }
         
+        .control-group { margin-bottom: 20px; }
+
         label { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 1rem;
-            margin-bottom: 15px; 
+            font-size: 0.9rem;
             font-weight: bold;
             color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 5px;
         }
 
         input[type="range"] { 
             width: 100%; 
-            height: 10px;
+            height: 8px;
             background: #1a1a1a; 
             border-radius: 10px;
             appearance: none;
             outline: none;
-            margin: 15px 0;
+            margin: 10px 0;
             cursor: pointer;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             background: #fff;
             border: 3px solid #00ff41;
             border-radius: 50%;
-            box-shadow: 0 0 15px #00ff41;
+            box-shadow: 0 0 10px #00ff41;
         }
+
+        /* STILE FLAG CARATTERI */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item.active {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: #00ff41;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+        }
+
+        .option-item input { display: none; }
+
+        .option-label {
+            font-size: 0.7rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .active .option-label { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
 
         button {
             width: 100%;
-            padding: 20px;
+            padding: 18px;
             background: #00ff41;
             color: #000;
             border: none;
@@ -161,9 +201,9 @@
         button:active { transform: translateY(2px); box-shadow: 0 2px 0 #008f25; }
 
         .hint {
-            font-size: 0.75rem; 
-            margin-top: 25px; 
-            opacity: 0.6; 
+            font-size: 0.7rem; 
+            margin-top: 20px; 
+            opacity: 0.5; 
             color: #fff; 
             letter-spacing: 1px;
         }
@@ -172,7 +212,7 @@
 <body>
 
     <div class="container" id="main-container">
-        <div class="header-title">Vibe Password</div>
+        <div class="header-title">Vibe Pass</div>
         
         <div id="password-display" onclick="copyToClipboard()">GENERA</div>
 
@@ -183,11 +223,32 @@
         <div id="crack-time">In attesa di input...</div>
 
         <div class="controls">
-            <label>
-                <span>LUNGHEZZA</span>
-                <span id="length-val">16</span>
-            </label>
-            <input type="range" id="length-slider" min="6" max="32" value="16" oninput="updateUI()">
+            <div class="control-group">
+                <label>
+                    <span>LUNGHEZZA</span>
+                    <span id="length-val">16</span>
+                </label>
+                <input type="range" id="length-slider" min="6" max="32" value="16" oninput="updateUI()">
+            </div>
+
+            <div class="options-grid">
+                <div class="option-item active" onclick="toggleOption(this)">
+                    <input type="checkbox" id="opt-upper" checked>
+                    <span class="option-label">MAIUSCOLE</span>
+                </div>
+                <div class="option-item active" onclick="toggleOption(this)">
+                    <input type="checkbox" id="opt-lower" checked>
+                    <span class="option-label">MINUSCOLE</span>
+                </div>
+                <div class="option-item active" onclick="toggleOption(this)">
+                    <input type="checkbox" id="opt-numbers" checked>
+                    <span class="option-label">NUMERI</span>
+                </div>
+                <div class="option-item active" onclick="toggleOption(this)">
+                    <input type="checkbox" id="opt-symbols" checked>
+                    <span class="option-label">SIMBOLI</span>
+                </div>
+            </div>
         </div>
 
         <button onclick="generate()">genera</button>
@@ -195,20 +256,37 @@
     </div>
 
     <script>
-        const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-        let hasGenerated = false;
-        
-        const feedbackMessages = {
-            weak: ["Livello: Imbarazzante.", "Hackerata in 1 secondo.", "Troppo debole.", "Inutile."],
-            medium: ["Moderata.", "Non male, ma vulnerabile.", "Dura quanto un biscotto.", "Sufficiente."],
-            strong: ["Solida crittografia.", "Inizia ad essere seria.", "Protocollo rispettato.", "Difficile scardinarla."],
-            unbreakable: ["Livello Dio.", "Inviolabile.", "Crittografia quantistica.", "Muro di titanio."]
+        const charsets = {
+            upper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            lower: "abcdefghijklmnopqrstuvwxyz",
+            numbers: "0123456789",
+            symbols: "!@#$%^&*()_+[]{}|;:,.<>?"
         };
 
-        function getRandomMessage(type) {
-            const messages = feedbackMessages[type];
-            return messages[Math.floor(Math.random() * messages.length)];
+        let hasGenerated = false;
+
+        function toggleOption(el) {
+            const checkbox = el.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            el.classList.toggle('active');
+            updateUI();
         }
+
+        function getActiveCharset() {
+            let active = "";
+            if (document.getElementById('opt-upper').checked) active += charsets.upper;
+            if (document.getElementById('opt-lower').checked) active += charsets.lower;
+            if (document.getElementById('opt-numbers').checked) active += charsets.numbers;
+            if (document.getElementById('opt-symbols').checked) active += charsets.symbols;
+            return active || charsets.lower; // Default se tutto è deselezionato
+        }
+        
+        const feedbackMessages = {
+            weak: ["Livello: Imbarazzante.", "Troppo semplice.", "Vulnerabile.", "Inutile."],
+            medium: ["Moderata.", "Accettabile.", "Dura quanto un biscotto.", "Sufficiente."],
+            strong: ["Solida crittografia.", "Inizia ad essere seria.", "Protocollo rispettato.", "Sicura."],
+            unbreakable: ["Livello Dio.", "Inviolabile.", "Quantistica.", "Muro di titanio."]
+        };
 
         function updateUI() {
             const slider = document.getElementById('length-slider');
@@ -222,20 +300,27 @@
             const percentage = ((val - slider.min) / (slider.max - slider.min)) * 100;
             slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
 
-            if (val > 24) display.style.fontSize = "0.95rem";
-            else if (val > 18) display.style.fontSize = "1.1rem";
-            else display.style.fontSize = "1.3rem";
+            if (val > 24) display.style.fontSize = "0.9rem";
+            else display.style.fontSize = "1.2rem";
 
-            const strengthPercent = (val / 32) * 100;
+            // Calcolo forza basato su lunghezza e varietà
+            const activeCount = [
+                document.getElementById('opt-upper').checked,
+                document.getElementById('opt-lower').checked,
+                document.getElementById('opt-numbers').checked,
+                document.getElementById('opt-symbols').checked
+            ].filter(Boolean).length;
+
+            const score = val * (activeCount * 0.5);
+            const strengthPercent = Math.min((score / 45) * 100, 100);
             bar.style.width = strengthPercent + "%";
 
             let type = "";
             let color = "";
             
-            if (val < 9) { type = "weak"; color = "#ff3b30"; } 
-            else if (val < 13) { type = "medium"; color = "#ff9f0a"; } 
-            else if (val < 17) { type = "medium"; color = "#ffcc00"; } 
-            else if (val < 22) { type = "strong"; color = "#4cd964"; } 
+            if (strengthPercent < 30) { type = "weak"; color = "#ff3b30"; } 
+            else if (strengthPercent < 60) { type = "medium"; color = "#ffcc00"; } 
+            else if (strengthPercent < 85) { type = "strong"; color = "#4cd964"; } 
             else { type = "unbreakable"; color = "#00ff41"; } 
             
             bar.style.backgroundColor = color;
@@ -243,7 +328,7 @@
             
             if (hasGenerated) {
                 crackText.style.opacity = "1";
-                crackText.innerText = getRandomMessage(type);
+                crackText.innerText = feedbackMessages[type][0]; // Prende il primo feedback
                 crackText.style.color = color;
                 crackText.style.textShadow = `0 0 5px ${color}`;
             }
@@ -254,6 +339,7 @@
             const container = document.getElementById('main-container');
             const length = document.getElementById('length-slider').value;
             const display = document.getElementById('password-display');
+            const currentCharset = getActiveCharset();
             
             container.classList.remove('pulse-active');
             void container.offsetWidth; 
@@ -263,14 +349,14 @@
 
             let finalPass = "";
             for (let i = 0; i < length; i++) {
-                finalPass += charset.charAt(Math.floor(Math.random() * charset.length));
+                finalPass += currentCharset.charAt(Math.floor(Math.random() * currentCharset.length));
             }
 
             let step = 0;
             const timer = setInterval(() => {
                 display.innerText = finalPass.split("").map((char, index) => {
                     if (index < step) return char;
-                    return charset.charAt(Math.floor(Math.random() * charset.length));
+                    return currentCharset.charAt(Math.floor(Math.random() * currentCharset.length));
                 }).join("");
                 if (step >= length) clearInterval(timer);
                 step += 0.5;
@@ -281,16 +367,10 @@
             const display = document.getElementById('password-display');
             const text = display.innerText;
             if (text === "GENERA" || text === "COPIATA!") return;
-            
             navigator.clipboard.writeText(text).then(() => {
-                const currentFontSize = display.style.fontSize;
+                const oldText = display.innerText;
                 display.innerText = "COPIATA!";
-                display.style.boxShadow = "0 0 30px #00ff41";
-                setTimeout(() => { 
-                    display.innerText = text; 
-                    display.style.fontSize = currentFontSize;
-                    display.style.boxShadow = "0 0 15px rgba(0, 255, 65, 0.3)";
-                }, 1000);
+                setTimeout(() => { display.innerText = oldText; }, 1000);
             });
         }
 
