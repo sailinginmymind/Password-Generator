@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 4.7 Professional</title>
+    <title>Vibe Password Gen 1.5.0</title>
     <style>
         * { 
             box-sizing: border-box; 
@@ -197,38 +197,6 @@
     <script>
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         let hasGenerated = false;
-
-        // --- SISTEMA AUDIO WEB API PROFESSIONAL ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playProfessionalSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            const now = audioCtx.currentTime;
-
-            if (type === 'generate') {
-                // Suono profondo (Sine) - Tech Thump
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(120, now);
-                osc.frequency.exponentialRampToValueAtTime(40, now + 0.2);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.2);
-            } else {
-                // Suono copia (Triangle) - Crystal Chirp
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(600, now);
-                osc.frequency.exponentialRampToValueAtTime(1000, now + 0.05);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.linearRampToValueAtTime(0, now + 0.05);
-            }
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(now + 0.2);
-        }
         
         const feedbackMessages = {
             weak: ["Livello: Imbarazzante.", "Hackerata in 1 secondo.", "Troppo debole.", "Inutile."],
@@ -282,8 +250,6 @@
         }
 
         function generate() {
-            playProfessionalSound('generate');
-
             hasGenerated = true;
             const container = document.getElementById('main-container');
             const length = document.getElementById('length-slider').value;
@@ -316,8 +282,6 @@
             const text = display.innerText;
             if (text === "GENERA" || text === "COPIATA!") return;
             
-            playProfessionalSound('copy');
-
             navigator.clipboard.writeText(text).then(() => {
                 const currentFontSize = display.style.fontSize;
                 display.innerText = "COPIATA!";
