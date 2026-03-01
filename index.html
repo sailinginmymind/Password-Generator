@@ -3,146 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Password Gen 3.2</title>
+    <title>Vibe Password Gen 4.0</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        /* Animazione Glitch discreta per il titolo */
+        @keyframes titleGlitch {
+            0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
+            95% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; opacity: 1; }
+            96% { text-shadow: 0 0 5px #00ff41; opacity: 0.8; transform: skewX(-5deg); }
+            97% { text-shadow: 0 0 15px #00ff41; opacity: 1; transform: skewX(5deg); }
+            98% { text-shadow: 0 0 10px #00ff41; opacity: 0.9; transform: skewX(0deg); }
+            100% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
+        }
+
         body {
             margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #0a0a0b;
+            /* Sfondo sfumato Cyberpunk */
+            background: radial-gradient(circle at center, #0d1a10 0%, #050505 70%);
             font-family: 'Courier New', Courier, monospace;
             color: #00ff41;
+            overflow: hidden;
         }
+
         .container {
-            width: 360px;
-            padding: 35px 25px;
-            border: 1px solid #00ff41;
+            width: 380px; /* Leggermente più largo per il titolo */
+            padding: 40px 30px;
+            border: 2px solid #00ff41;
             border-radius: 20px;
-            background: rgba(0, 255, 65, 0.05);
-            box-shadow: 0 0 25px rgba(0, 255, 65, 0.15);
+            background: rgba(0, 0, 0, 0.85); /* Sfondo scuro quasi coprente */
+            /* Glow sul container */
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.1);
             text-align: center;
+            position: relative;
         }
-        .header-label {
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            opacity: 0.8;
-            font-weight: bold;
+
+        /* TITOLO AGGIORNATO: Grande, Neon e Glitch */
+        .header-title {
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #fff; /* Bianco per contrasto, il glow è verde */
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            animation: titleGlitch 5s infinite; /* Animazione ogni 5 secondi */
+            position: relative;
         }
+
         #password-display {
             width: 100%;
-            height: 75px;
+            height: 80px;
             background: #000;
-            border: 1px solid rgba(0, 255, 65, 0.4);
+            border: 2px solid rgba(0, 255, 65, 0.6);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             cursor: pointer;
             overflow: hidden;
             word-break: break-all;
-            padding: 0 15px;
-            letter-spacing: 1.5px;
+            padding: 0 20px;
+            letter-spacing: 2px;
+            /* Glow sul display */
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             transition: all 0.2s ease;
         }
+
+        #password-display:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
         .strength-container {
             width: 100%;
             height: 6px;
             background: #1a1a1a;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             border-radius: 3px;
+            overflow: hidden;
         }
+
         #strength-bar {
             width: 50%;
             height: 100%;
             background: #ff3b30;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         #crack-time {
             font-size: 0.75rem;
             text-transform: uppercase;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             letter-spacing: 1px;
-            min-height: 1em;
+            min-height: 1.2em;
         }
-        .controls { text-align: left; margin-bottom: 25px; }
+
+        .controls { text-align: left; margin-bottom: 30px; }
+        
         label { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 15px; 
             font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
         }
 
-        /* --- SLIDER CON RIEMPIMENTO DINAMICO --- */
+        /* --- SLIDER CON RIEMPIMENTO E GLOW --- */
         input[type="range"] { 
             width: 100%; 
             height: 8px;
-            /* Il colore di base sarà gestito dal JS con linear-gradient */
             background: #1a1a1a; 
             border-radius: 10px;
             appearance: none;
             outline: none;
             margin: 15px 0;
             cursor: pointer;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
         }
 
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 24px;
-            height: 24px;
-            background: #00ff41;
+            width: 26px;
+            height: 26px;
+            background: #fff; /* Bianco all'interno per il glow */
             border-radius: 50%;
             cursor: pointer;
-            border: 2px solid #0a0a0b;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
-            margin-top: -2px; /* Allineamento */
+            border: 3px solid #00ff41;
+            /* Forte glow sul thumb */
+            box-shadow: 0 0 15px #00ff41, 0 0 5px #00ff41;
+            margin-top: -2px;
+            transition: transform 0.1s;
         }
 
-        input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: #00ff41;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #0a0a0b;
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
 
         button {
             width: 100%;
-            padding: 18px;
+            padding: 20px;
             background: #00ff41;
-            color: #0a0a0b;
+            color: #000;
             border: none;
             border-radius: 12px;
             font-weight: 900;
-            font-size: 1rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
             cursor: pointer;
             font-family: inherit;
-            box-shadow: 0 4px 0 #008f25;
-            transition: all 0.1s;
+            box-shadow: 0 4px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
+            transition: all 0.1s ease-out;
+            letter-spacing: 1px;
         }
+
+        button:hover {
+            box-shadow: 0 4px 0 #008f25, 0 0 25px rgba(0, 255, 65, 0.8);
+        }
+
         button:active { 
             transform: translateY(2px); 
-            box-shadow: 0 2px 0 #008f25;
+            box-shadow: 0 2px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
         }
+
         .hint {
-            font-size: 0.7rem; 
-            margin-top: 20px; 
-            opacity: 0.5; 
+            font-size: 0.75rem; 
+            margin-top: 25px; 
+            opacity: 0.6; 
             letter-spacing: 1px;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="header-label">VIBE PASSWORD</div>
+        <div class="header-title">Vibe Password</div>
         
         <div id="password-display" onclick="copyToClipboard()">GENERA</div>
 
@@ -177,16 +221,16 @@
             const min = slider.min;
             const max = slider.max;
             const percentage = ((val - min) / (max - min)) * 100;
-            // Applichiamo il gradiente dinamico sul track
+            // Gradiente dinamico sul track
             slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
 
-            // Font dinamico
+            // Font dinamico ottimizzato per il nuovo display più grande
             if (val > 24) {
-                display.style.fontSize = "0.85rem";
+                display.style.fontSize = "0.95rem";
             } else if (val > 18) {
-                display.style.fontSize = "1rem";
+                display.style.fontSize = "1.1rem";
             } else {
-                display.style.fontSize = "1.2rem";
+                display.style.fontSize = "1.3rem";
             }
 
             const bar = document.getElementById('strength-bar');
@@ -195,31 +239,37 @@
             bar.style.width = strengthPercent + "%";
 
             let time = "";
+            let color = "";
             if (val < 8) {
                 time = "Istante (Brute Force)";
-                bar.style.backgroundColor = "#ff3b30";
+                color = "#ff3b30"; // Rosso
             } else if (val < 11) {
                 time = "~2 ore";
-                bar.style.backgroundColor = "#ff3b30";
+                color = "#ff3b30"; // Rosso
             } else if (val < 13) {
                 time = "~5 giorni";
-                bar.style.backgroundColor = "#ff9f0a";
+                color = "#ff9f0a"; // Arancione
             } else if (val < 15) {
                 time = "~8 mesi";
-                bar.style.backgroundColor = "#ff9f0a";
+                color = "#ff9f0a"; // Arancione
             } else if (val < 18) {
                 time = "~200 anni";
-                bar.style.backgroundColor = "#00ff41";
+                color = "#00ff41"; // Verde
             } else if (val < 22) {
                 time = "~50.000 anni";
-                bar.style.backgroundColor = "#00ff41";
+                color = "#00ff41"; // Verde
             } else {
                 time = "Millenni (Inviolabile)";
-                bar.style.backgroundColor = "#00ff41";
+                color = "#00ff41"; // Verde
             }
             
+            bar.style.backgroundColor = color;
+            // Aggiungiamo il glow anche alla barra di forza
+            bar.style.boxShadow = `0 0 10px ${color}`;
+            
             crackText.innerText = "Tempo crack: " + time;
-            crackText.style.color = bar.style.backgroundColor;
+            crackText.style.color = color;
+            crackText.style.textShadow = `0 0 5px ${color}`;
         }
 
         function generate() {
@@ -247,11 +297,14 @@
             if (text === "GENERA" || text === "COPIATA!") return;
             navigator.clipboard.writeText(text).then(() => {
                 const currentFontSize = display.style.fontSize;
-                display.style.fontSize = "1.1rem"; 
+                display.style.fontSize = "1.2rem"; 
                 display.innerText = "COPIATA!";
+                // Effetto glow extra temporaneo
+                display.style.boxShadow = "0 0 30px #00ff41";
                 setTimeout(() => { 
                     display.innerText = text; 
                     display.style.fontSize = currentFontSize;
+                    display.style.boxShadow = "0 0 15px rgba(0, 255, 65, 0.3)";
                 }, 1000);
             });
         }
