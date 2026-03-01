@@ -27,18 +27,21 @@
         }
         #password-display {
             width: 100%;
-            height: 60px;
+            height: 66px; /* Leggermente aumentato per comfort */
             background: #000;
             border: 1px solid rgba(0, 255, 65, 0.4);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            /* Font rimosso da qui, gestito via JS */
             margin-bottom: 5px;
             cursor: pointer;
             overflow: hidden;
+            word-break: break-all; /* Evita che la parola esca dai bordi */
+            padding: 0 10px;
             letter-spacing: 1px;
+            transition: font-size 0.2s ease;
         }
         .strength-container {
             width: 100%;
@@ -53,7 +56,6 @@
             background: #ff3b30;
             transition: 0.3s;
         }
-        /* NUOVO ELEMENTO: TEMPO DI CRACKING */
         #crack-time {
             font-size: 0.65rem;
             text-transform: uppercase;
@@ -109,14 +111,23 @@
         
         function updateUI() {
             const val = document.getElementById('length-slider').value;
+            const display = document.getElementById('password-display');
             document.getElementById('length-val').innerText = val;
             
+            // AGGIUSTAMENTO DINAMICO DEL FONT
+            if (val > 24) {
+                display.style.fontSize = "0.7rem";
+            } else if (val > 18) {
+                display.style.fontSize = "0.85rem";
+            } else {
+                display.style.fontSize = "1rem";
+            }
+
             const bar = document.getElementById('strength-bar');
             const crackText = document.getElementById('crack-time');
             const percent = (val / 32) * 100;
             bar.style.width = percent + "%";
 
-            // Calcolo tempo stimato (semplificato)
             let time = "";
             if (val < 8) {
                 time = "Istante (Brute Force)";
@@ -169,8 +180,13 @@
             const text = display.innerText;
             if (text === "GENERA" || text === "COPIATA!") return;
             navigator.clipboard.writeText(text).then(() => {
+                const currentFontSize = display.style.fontSize;
+                display.style.fontSize = "1rem"; // Reset momentaneo per il feedback
                 display.innerText = "COPIATA!";
-                setTimeout(() => { display.innerText = text; }, 1000);
+                setTimeout(() => { 
+                    display.innerText = text; 
+                    display.style.fontSize = currentFontSize; // Ritorna alla dimensione corretta
+                }, 1000);
             });
         }
 
