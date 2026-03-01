@@ -2,11 +2,28 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Password Gen 4.2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vibe Password Gen 4.4</title>
     <style>
-        /* [STILI MANTENUTI INVARIATI] */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100dvh;
+            background: radial-gradient(circle at center, #0d1a10 0%, #050505 70%);
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff41;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         @keyframes titleGlitch {
             0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
             95% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; opacity: 1; }
@@ -15,26 +32,18 @@
             98% { text-shadow: 0 0 10px #00ff41; opacity: 0.9; transform: skewX(0deg); }
             100% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
         }
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(circle at center, #0d1a10 0%, #050505 70%);
-            font-family: 'Courier New', Courier, monospace;
-            color: #00ff41;
-            overflow: hidden;
-        }
+
         .container {
-            width: 380px;
-            padding: 40px 30px;
+            width: 90%;
+            max-width: 380px;
+            padding: 40px 25px;
             border: 2px solid #00ff41;
             border-radius: 20px;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.1);
             text-align: center;
         }
+
         .header-title {
             font-size: 2.2rem;
             letter-spacing: -1px;
@@ -42,9 +51,10 @@
             font-weight: 900;
             text-transform: uppercase;
             color: #fff;
-            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
             animation: titleGlitch 5s infinite;
         }
+
         #password-display {
             width: 100%;
             height: 80px;
@@ -63,6 +73,7 @@
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             transition: all 0.2s ease;
         }
+
         .strength-container {
             width: 100%;
             height: 6px;
@@ -71,11 +82,13 @@
             border-radius: 3px;
             overflow: hidden;
         }
+
         #strength-bar {
-            width: 50%;
+            width: 0%;
             height: 100%;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         #crack-time {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -85,8 +98,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 0; /* Nascondo inizialmente */
+            transition: opacity 0.5s ease;
         }
+
         .controls { text-align: left; margin-bottom: 30px; }
+        
         label { 
             display: flex; 
             justify-content: space-between; 
@@ -95,9 +112,10 @@
             font-weight: bold;
             color: rgba(255, 255, 255, 0.9);
         }
+
         input[type="range"] { 
             width: 100%; 
-            height: 8px;
+            height: 10px;
             background: #1a1a1a; 
             border-radius: 10px;
             appearance: none;
@@ -105,15 +123,17 @@
             margin: 15px 0;
             cursor: pointer;
         }
+
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             background: #fff;
             border: 3px solid #00ff41;
             border-radius: 50%;
             box-shadow: 0 0 15px #00ff41;
         }
+
         button {
             width: 100%;
             padding: 20px;
@@ -127,6 +147,16 @@
             cursor: pointer;
             box-shadow: 0 4px 0 #008f25, 0 0 15px rgba(0, 255, 65, 0.5);
             transition: all 0.1s;
+        }
+
+        button:active { transform: translateY(2px); box-shadow: 0 2px 0 #008f25; }
+
+        .hint {
+            font-size: 0.75rem; 
+            margin-top: 25px; 
+            opacity: 0.6; 
+            color: #fff; 
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -152,37 +182,18 @@
         </div>
 
         <button onclick="generate()">genera</button>
-        <div style="font-size: 0.75rem; margin-top: 25px; opacity: 0.6; color: #fff; letter-spacing: 1px;">CLICCA PER COPIARE</div>
+        <div class="hint">CLICCA PER COPIARE</div>
     </div>
 
     <script>
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+        let hasGenerated = false; // Flag per controllare se è stata generata la prima password
         
         const feedbackMessages = {
-            weak: [
-                "Livello: Imbarazzante. Un tostapane la indovinerebbe.",
-                "Dici sul serio? Mia nonna hackererebbe questo in 1 secondo.",
-                "Praticamente stai urlando la password ai russi.",
-                "Efficace quanto una porta girevole senza vetri."
-            ],
-            medium: [
-                "Moderata. Un dilettante farebbe fatica, un pro ti ride in faccia.",
-                "Non male, ma il Dark Web ha già la soluzione.",
-                "Dura quanto un biscotto inzuppato nel latte.",
-                "Sufficiente per l'account della palestra, non per la banca."
-            ],
-            strong: [
-                "Solida. Ora stiamo parlando di vera crittografia.",
-                "Sicura. Anche un supercomputer suderebbe un po'.",
-                "Protocollo rispettato. Finalmente qualcosa di serio.",
-                "Difficile da scardinare. Dormi tranquillo (forse)."
-            ],
-            unbreakable: [
-                "Livello Dio. Ci rivediamo tra qualche era geologica.",
-                "Inviolabile. L'universo morirà prima che la indovinino.",
-                "Crittografia quantistica. Nemmeno la CIA saprebbe dove iniziare.",
-                "Complimenti, hai appena creato un muro di titanio digitale."
-            ]
+            weak: ["Livello: Imbarazzante. Un tostapane la indovinerebbe.", "Mia nonna hackererebbe questo in 1 secondo.", "Stai urlando la password ai russi.", "Efficace quanto una porta girevole senza vetri."],
+            medium: ["Moderata. Un dilettante farebbe fatica, un pro no.", "Non male, ma il Dark Web ha già la soluzione.", "Dura quanto un biscotto inzuppato nel latte.", "Sufficiente per la palestra, non per la banca."],
+            strong: ["Solida. Ora stiamo parlando di vera crittografia.", "Sicura. Anche un supercomputer suderebbe un po'.", "Protocollo rispettato. Finalmente qualcosa di serio.", "Difficile da scardinare. Dormi tranquillo."],
+            unbreakable: ["Livello Dio. Ci rivediamo tra qualche era geologica.", "L'universo morirà prima che la indovinino.", "Crittografia quantistica. Nemmeno la CIA sa dove iniziare.", "Hai creato un muro di titanio digitale."]
         };
 
         function getRandomMessage(type) {
@@ -194,6 +205,9 @@
             const slider = document.getElementById('length-slider');
             const val = parseInt(slider.value);
             const display = document.getElementById('password-display');
+            const bar = document.getElementById('strength-bar');
+            const crackText = document.getElementById('crack-time');
+            
             document.getElementById('length-val').innerText = val;
             
             const percentage = ((val - slider.min) / (slider.max - slider.min)) * 100;
@@ -203,30 +217,39 @@
             else if (val > 18) display.style.fontSize = "1.1rem";
             else display.style.fontSize = "1.3rem";
 
-            const bar = document.getElementById('strength-bar');
-            const crackText = document.getElementById('crack-time');
             const strengthPercent = (val / 32) * 100;
             bar.style.width = strengthPercent + "%";
 
             let type = "";
             let color = "";
             
-            if (val < 11) { type = "weak"; color = "#ff3b30"; }
-            else if (val < 15) { type = "medium"; color = "#ff9f0a"; }
-            else if (val < 22) { type = "strong"; color = "#00ff41"; }
-            else { type = "unbreakable"; color = "#00ff41"; }
+            // LOGICA COLORI INTERMEDI
+            if (val < 9) { type = "weak"; color = "#ff3b30"; } // Rosso
+            else if (val < 13) { type = "medium"; color = "#ff9f0a"; } // Arancione
+            else if (val < 17) { type = "medium"; color = "#ffcc00"; } // Giallo/Oro
+            else if (val < 22) { type = "strong"; color = "#4cd964"; } // Verde chiaro
+            else { type = "unbreakable"; color = "#00ff41"; } // Verde Neon
             
             bar.style.backgroundColor = color;
             bar.style.boxShadow = `0 0 10px ${color}`;
             
-            crackText.innerText = getRandomMessage(type);
-            crackText.style.color = color;
-            crackText.style.textShadow = `0 0 5px ${color}`;
+            // Mostra il testo solo se l'utente ha già premuto genera almeno una volta
+            if (hasGenerated) {
+                crackText.style.opacity = "1";
+                crackText.innerText = getRandomMessage(type);
+                crackText.style.color = color;
+                crackText.style.textShadow = `0 0 5px ${color}`;
+            }
         }
 
         function generate() {
+            hasGenerated = true; // Attivo la visualizzazione dei messaggi
             const length = document.getElementById('length-slider').value;
             const display = document.getElementById('password-display');
+            
+            // Aggiorno subito la UI per mostrare il messaggio
+            updateUI();
+
             let finalPass = "";
             for (let i = 0; i < length; i++) {
                 finalPass += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -249,7 +272,6 @@
             if (text === "GENERA" || text === "COPIATA!") return;
             navigator.clipboard.writeText(text).then(() => {
                 const currentFontSize = display.style.fontSize;
-                display.style.fontSize = "1.2rem"; 
                 display.innerText = "COPIATA!";
                 display.style.boxShadow = "0 0 30px #00ff41";
                 setTimeout(() => { 
