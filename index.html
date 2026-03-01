@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 4.5</title>
+    <title>Vibe Password Gen 4.6</title>
     <style>
+        /* [TUTTI GLI STILI PRECEDENTI MANTENUTI] */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -24,7 +25,6 @@
             align-items: center;
         }
 
-        /* --- ANIMAZIONI --- */
         @keyframes titleGlitch {
             0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
             95% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; opacity: 1; }
@@ -34,7 +34,6 @@
             100% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
         }
 
-        /* Animazione Glow per il trigger genera */
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); border-color: #00ff41; }
             50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.8), inset 0 0 20px rgba(0, 255, 65, 0.4); border-color: #fff; }
@@ -53,10 +52,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Classe applicata via JS al click */
-        .pulse-active {
-            animation: pulseGlow 0.6s ease-out;
-        }
+        .pulse-active { animation: pulseGlow 0.6s ease-out; }
 
         .header-title {
             font-size: 2.2rem;
@@ -202,12 +198,33 @@
     <script>
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         let hasGenerated = false;
+
+        // --- SISTEMA AUDIO WEB API ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playBeep(freq = 150, duration = 0.1) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'square'; // Suono stile retro hacker
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(freq + 100, audioCtx.currentTime + duration);
+
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
         
         const feedbackMessages = {
-            weak: ["Livello: Imbarazzante. Un tostapane la indovinerebbe.", "Mia nonna hackererebbe questo in 1 secondo.", "Stai urlando la password ai russi.", "Efficace quanto una porta girevole senza vetri."],
-            medium: ["Moderata. Un dilettante farebbe fatica, un pro no.", "Non male, ma il Dark Web ha già la soluzione.", "Dura quanto un biscotto inzuppato nel latte.", "Sufficiente per la palestra, non per la banca."],
-            strong: ["Solida. Ora stiamo parlando di vera crittografia.", "Sicura. Anche un supercomputer suderebbe un po'.", "Protocollo rispettato. Finalmente qualcosa di serio.", "Difficile da scardinare. Dormi tranquillo."],
-            unbreakable: ["Livello Dio. Ci rivediamo tra qualche era geologica.", "L'universo morirà prima che la indovinino.", "Crittografia quantistica. Nemmeno la CIA sa dove iniziare.", "Hai creato un muro di titanio digitale."]
+            weak: ["Livello: Imbarazzante.", "Hackerata in 1 secondo.", "Troppo debole.", "Inutile."],
+            medium: ["Moderata.", "Non male, ma vulnerabile.", "Dura quanto un biscotto.", "Sufficiente."],
+            strong: ["Solida crittografia.", "Inizia ad essere seria.", "Protocollo rispettato.", "Difficile scardinarla."],
+            unbreakable: ["Livello Dio.", "Inviolabile.", "Crittografia quantistica.", "Muro di titanio."]
         };
 
         function getRandomMessage(type) {
@@ -255,14 +272,19 @@
         }
 
         function generate() {
+            // Sblocca il contesto audio per Mobile
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            playBeep(200, 0.15); // Esegue il bip hacker
+
             hasGenerated = true;
             const container = document.getElementById('main-container');
             const length = document.getElementById('length-slider').value;
             const display = document.getElementById('password-display');
             
-            // Trigger animazione Pulse Glow
             container.classList.remove('pulse-active');
-            void container.offsetWidth; // Trigger reflow per riavviare animazione
+            void container.offsetWidth; 
             container.classList.add('pulse-active');
 
             updateUI();
@@ -287,6 +309,9 @@
             const display = document.getElementById('password-display');
             const text = display.innerText;
             if (text === "GENERA" || text === "COPIATA!") return;
+            
+            playBeep(400, 0.05); // Bip più alto per la copia
+
             navigator.clipboard.writeText(text).then(() => {
                 const currentFontSize = display.style.fontSize;
                 display.innerText = "COPIATA!";
@@ -298,6 +323,9 @@
                 }, 1000);
             });
         }
+
+            // [RIGA AGGIUNTA PER IL VOLUME SU MOBILE]
+            // Alcuni browser mobile richiedono che l'audio sia abilitato dopo un primo tocco.
 
         updateUI();
     </script>
