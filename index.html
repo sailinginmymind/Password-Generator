@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 1.6.2</title>
+    <title>Vibe Password Gen 1.7.0</title>
     <style>
         * { 
             box-sizing: border-box; 
@@ -66,7 +66,7 @@
 
         #password-display {
             width: 100%;
-            height: 75px;
+            min-height: 80px; /* Altezza minima dinamica */
             background: #000;
             border: 2px solid rgba(0, 255, 65, 0.6);
             border-radius: 12px;
@@ -75,13 +75,15 @@
             justify-content: center;
             margin-bottom: 10px;
             cursor: pointer;
-            overflow: hidden;
-            word-break: break-all;
-            padding: 0 15px;
+            word-break: break-all; /* Fondamentale per andare a capo */
+            overflow-wrap: break-word;
+            padding: 15px;
             letter-spacing: 2px;
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
             transition: all 0.2s ease;
             font-weight: bold;
+            line-height: 1.2;
+            text-align: center;
         }
 
         .strength-container {
@@ -102,7 +104,7 @@
         #crack-time {
             font-size: 0.68rem;
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
             min-height: 2.5em;
             display: flex;
@@ -114,7 +116,7 @@
 
         .controls { text-align: left; }
         
-        .control-group { margin-bottom: 25px; }
+        .control-group { margin-bottom: 20px; }
 
         label { 
             display: flex; 
@@ -150,7 +152,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .option-item {
@@ -175,7 +177,7 @@
         .option-item input { display: none; }
 
         .option-label {
-            font-size: 0.9rem; /* Leggermente più grande per i simboli brevi */
+            font-size: 0.9rem;
             font-weight: 900;
             color: rgba(255, 255, 255, 0.4);
             letter-spacing: 2px;
@@ -206,7 +208,7 @@
 
         .hint {
             font-size: 0.75rem; 
-            margin-top: 25px; 
+            margin-top: 20px; 
             opacity: 0.5; 
             color: #fff; 
             letter-spacing: 1px;
@@ -232,7 +234,7 @@
                     <span>LUNGHEZZA</span>
                     <span id="length-val">16</span>
                 </label>
-                <input type="range" id="length-slider" min="6" max="32" value="16" oninput="updateUI()">
+                <input type="range" id="length-slider" min="6" max="52" value="16" oninput="updateUI()">
             </div>
 
             <div class="options-grid">
@@ -304,7 +306,9 @@
             const percentage = ((val - slider.min) / (slider.max - slider.min)) * 100;
             slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
 
-            if (val > 24) display.style.fontSize = "0.95rem";
+            // Ridimensionamento font più aggressivo per lunghezze elevate
+            if (val > 40) display.style.fontSize = "0.75rem";
+            else if (val > 24) display.style.fontSize = "0.95rem";
             else display.style.fontSize = "1.25rem";
 
             const activeCount = [
@@ -314,8 +318,9 @@
                 document.getElementById('opt-symbols').checked
             ].filter(Boolean).length;
 
+            // Ricalibrato punteggio per la nuova lunghezza max
             const score = val * (activeCount * 0.5);
-            const strengthPercent = Math.min((score / 45) * 100, 100);
+            const strengthPercent = Math.min((score / 60) * 100, 100);
             bar.style.width = strengthPercent + "%";
 
             let color = "";
