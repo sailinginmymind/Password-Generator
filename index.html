@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Password Gen 3.1</title>
+    <title>Vibe Password Gen 3.2</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
@@ -17,8 +17,8 @@
             color: #00ff41;
         }
         .container {
-            width: 360px; /* Leggermente più largo */
-            padding: 35px 25px; /* Più respiro interno */
+            width: 360px;
+            padding: 35px 25px;
             border: 1px solid #00ff41;
             border-radius: 20px;
             background: rgba(0, 255, 65, 0.05);
@@ -26,7 +26,7 @@
             text-align: center;
         }
         .header-label {
-            font-size: 0.85rem; /* Un pelo più grande */
+            font-size: 0.85rem;
             letter-spacing: 2px;
             margin-bottom: 25px;
             opacity: 0.8;
@@ -34,7 +34,7 @@
         }
         #password-display {
             width: 100%;
-            height: 75px; /* Più alto per leggibilità */
+            height: 75px;
             background: #000;
             border: 1px solid rgba(0, 255, 65, 0.4);
             border-radius: 12px;
@@ -51,7 +51,7 @@
         }
         .strength-container {
             width: 100%;
-            height: 6px; /* Leggermente più spessa */
+            height: 6px;
             background: #1a1a1a;
             margin-bottom: 12px;
             border-radius: 3px;
@@ -63,7 +63,7 @@
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #crack-time {
-            font-size: 0.75rem; /* Più leggibile */
+            font-size: 0.75rem;
             text-transform: uppercase;
             margin-bottom: 30px;
             letter-spacing: 1px;
@@ -73,33 +73,36 @@
         label { 
             display: flex; 
             justify-content: space-between; 
-            font-size: 0.95rem; /* Font aumentato */
+            font-size: 0.95rem;
             margin-bottom: 15px; 
             font-weight: bold;
         }
 
-        /* --- STILE SLIDER OTTIMIZZATO --- */
+        /* --- SLIDER CON RIEMPIMENTO DINAMICO --- */
         input[type="range"] { 
             width: 100%; 
-            height: 8px; /* Binario sottile ma visibile */
-            background: #1a1a1a;
+            height: 8px;
+            /* Il colore di base sarà gestito dal JS con linear-gradient */
+            background: #1a1a1a; 
             border-radius: 10px;
             appearance: none;
             outline: none;
-            margin: 15px 0; /* Più spazio per il dito */
+            margin: 15px 0;
+            cursor: pointer;
         }
-        /* Il "pallino" dello slider (Chrome/Safari) */
+
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 24px; /* Più grande per il touch */
+            width: 24px;
             height: 24px;
             background: #00ff41;
             border-radius: 50%;
             cursor: pointer;
             border: 2px solid #0a0a0b;
             box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            margin-top: -2px; /* Allineamento */
         }
-        /* Il "pallino" dello slider (Firefox) */
+
         input[type="range"]::-moz-range-thumb {
             width: 24px;
             height: 24px;
@@ -165,11 +168,19 @@
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
         
         function updateUI() {
-            const val = document.getElementById('length-slider').value;
+            const slider = document.getElementById('length-slider');
+            const val = slider.value;
             const display = document.getElementById('password-display');
             document.getElementById('length-val').innerText = val;
             
-            // Font dinamico ottimizzato
+            // --- CALCOLO RIEMPIMENTO SLIDER ---
+            const min = slider.min;
+            const max = slider.max;
+            const percentage = ((val - min) / (max - min)) * 100;
+            // Applichiamo il gradiente dinamico sul track
+            slider.style.background = `linear-gradient(to right, #00ff41 ${percentage}%, #1a1a1a ${percentage}%)`;
+
+            // Font dinamico
             if (val > 24) {
                 display.style.fontSize = "0.85rem";
             } else if (val > 18) {
@@ -180,8 +191,8 @@
 
             const bar = document.getElementById('strength-bar');
             const crackText = document.getElementById('crack-time');
-            const percent = (val / 32) * 100;
-            bar.style.width = percent + "%";
+            const strengthPercent = (val / 32) * 100;
+            bar.style.width = strengthPercent + "%";
 
             let time = "";
             if (val < 8) {
@@ -245,6 +256,7 @@
             });
         }
 
+        // Inizializza subito lo slider al caricamento
         updateUI();
     </script>
 </body>
