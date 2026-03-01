@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vibe Password Gen 4.4</title>
+    <title>Vibe Password Gen 4.5</title>
     <style>
         * { 
             box-sizing: border-box; 
@@ -24,6 +24,7 @@
             align-items: center;
         }
 
+        /* --- ANIMAZIONI --- */
         @keyframes titleGlitch {
             0% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
             95% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; opacity: 1; }
@@ -31,6 +32,13 @@
             97% { text-shadow: 0 0 15px #00ff41; opacity: 1; transform: skewX(5deg); }
             98% { text-shadow: 0 0 10px #00ff41; opacity: 0.9; transform: skewX(0deg); }
             100% { text-shadow: 0 0 10px #00ff41, -2px 0 red, 2px 0 blue; }
+        }
+
+        /* Animazione Glow per il trigger genera */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); border-color: #00ff41; }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.8), inset 0 0 20px rgba(0, 255, 65, 0.4); border-color: #fff; }
+            100% { box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); border-color: #00ff41; }
         }
 
         .container {
@@ -42,6 +50,12 @@
             background: rgba(0, 0, 0, 0.9);
             box-shadow: 0 0 30px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.1);
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Classe applicata via JS al click */
+        .pulse-active {
+            animation: pulseGlow 0.6s ease-out;
         }
 
         .header-title {
@@ -98,7 +112,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0; /* Nascondo inizialmente */
+            opacity: 0;
             transition: opacity 0.5s ease;
         }
 
@@ -162,7 +176,7 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="container" id="main-container">
         <div class="header-title">Vibe Password</div>
         
         <div id="password-display" onclick="copyToClipboard()">GENERA</div>
@@ -187,7 +201,7 @@
 
     <script>
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-        let hasGenerated = false; // Flag per controllare se è stata generata la prima password
+        let hasGenerated = false;
         
         const feedbackMessages = {
             weak: ["Livello: Imbarazzante. Un tostapane la indovinerebbe.", "Mia nonna hackererebbe questo in 1 secondo.", "Stai urlando la password ai russi.", "Efficace quanto una porta girevole senza vetri."],
@@ -223,17 +237,15 @@
             let type = "";
             let color = "";
             
-            // LOGICA COLORI INTERMEDI
-            if (val < 9) { type = "weak"; color = "#ff3b30"; } // Rosso
-            else if (val < 13) { type = "medium"; color = "#ff9f0a"; } // Arancione
-            else if (val < 17) { type = "medium"; color = "#ffcc00"; } // Giallo/Oro
-            else if (val < 22) { type = "strong"; color = "#4cd964"; } // Verde chiaro
-            else { type = "unbreakable"; color = "#00ff41"; } // Verde Neon
+            if (val < 9) { type = "weak"; color = "#ff3b30"; } 
+            else if (val < 13) { type = "medium"; color = "#ff9f0a"; } 
+            else if (val < 17) { type = "medium"; color = "#ffcc00"; } 
+            else if (val < 22) { type = "strong"; color = "#4cd964"; } 
+            else { type = "unbreakable"; color = "#00ff41"; } 
             
             bar.style.backgroundColor = color;
             bar.style.boxShadow = `0 0 10px ${color}`;
             
-            // Mostra il testo solo se l'utente ha già premuto genera almeno una volta
             if (hasGenerated) {
                 crackText.style.opacity = "1";
                 crackText.innerText = getRandomMessage(type);
@@ -243,11 +255,16 @@
         }
 
         function generate() {
-            hasGenerated = true; // Attivo la visualizzazione dei messaggi
+            hasGenerated = true;
+            const container = document.getElementById('main-container');
             const length = document.getElementById('length-slider').value;
             const display = document.getElementById('password-display');
             
-            // Aggiorno subito la UI per mostrare il messaggio
+            // Trigger animazione Pulse Glow
+            container.classList.remove('pulse-active');
+            void container.offsetWidth; // Trigger reflow per riavviare animazione
+            container.classList.add('pulse-active');
+
             updateUI();
 
             let finalPass = "";
