@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Password Gen 3.0</title>
+    <title>Vibe Password Gen 3.1</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
@@ -17,74 +17,129 @@
             color: #00ff41;
         }
         .container {
-            width: 340px;
-            padding: 30px;
+            width: 360px; /* Leggermente più largo */
+            padding: 35px 25px; /* Più respiro interno */
             border: 1px solid #00ff41;
-            border-radius: 15px;
+            border-radius: 20px;
             background: rgba(0, 255, 65, 0.05);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.15);
             text-align: center;
+        }
+        .header-label {
+            font-size: 0.85rem; /* Un pelo più grande */
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            opacity: 0.8;
+            font-weight: bold;
         }
         #password-display {
             width: 100%;
-            height: 66px; /* Leggermente aumentato per comfort */
+            height: 75px; /* Più alto per leggibilità */
             background: #000;
             border: 1px solid rgba(0, 255, 65, 0.4);
-            border-radius: 8px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Font rimosso da qui, gestito via JS */
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             cursor: pointer;
             overflow: hidden;
-            word-break: break-all; /* Evita che la parola esca dai bordi */
-            padding: 0 10px;
-            letter-spacing: 1px;
-            transition: font-size 0.2s ease;
+            word-break: break-all;
+            padding: 0 15px;
+            letter-spacing: 1.5px;
+            transition: all 0.2s ease;
         }
         .strength-container {
             width: 100%;
-            height: 4px;
-            background: #222;
-            margin-bottom: 10px;
-            border-radius: 2px;
+            height: 6px; /* Leggermente più spessa */
+            background: #1a1a1a;
+            margin-bottom: 12px;
+            border-radius: 3px;
         }
         #strength-bar {
             width: 50%;
             height: 100%;
             background: #ff3b30;
-            transition: 0.3s;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #crack-time {
-            font-size: 0.65rem;
+            font-size: 0.75rem; /* Più leggibile */
             text-transform: uppercase;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             letter-spacing: 1px;
-            color: #888;
+            min-height: 1em;
         }
-        .controls { text-align: left; margin-bottom: 20px; }
-        label { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px; }
-        input[type="range"] { width: 100%; accent-color: #00ff41; cursor: pointer; }
+        .controls { text-align: left; margin-bottom: 25px; }
+        label { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 0.95rem; /* Font aumentato */
+            margin-bottom: 15px; 
+            font-weight: bold;
+        }
+
+        /* --- STILE SLIDER OTTIMIZZATO --- */
+        input[type="range"] { 
+            width: 100%; 
+            height: 8px; /* Binario sottile ma visibile */
+            background: #1a1a1a;
+            border-radius: 10px;
+            appearance: none;
+            outline: none;
+            margin: 15px 0; /* Più spazio per il dito */
+        }
+        /* Il "pallino" dello slider (Chrome/Safari) */
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px; /* Più grande per il touch */
+            height: 24px;
+            background: #00ff41;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #0a0a0b;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+        /* Il "pallino" dello slider (Firefox) */
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #00ff41;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #0a0a0b;
+        }
+
         button {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             background: #00ff41;
             color: #0a0a0b;
             border: none;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1rem;
             text-transform: uppercase;
             cursor: pointer;
             font-family: inherit;
+            box-shadow: 0 4px 0 #008f25;
+            transition: all 0.1s;
         }
-        button:active { transform: scale(0.95); opacity: 0.8; }
+        button:active { 
+            transform: translateY(2px); 
+            box-shadow: 0 2px 0 #008f25;
+        }
+        .hint {
+            font-size: 0.7rem; 
+            margin-top: 20px; 
+            opacity: 0.5; 
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div style="font-size: 0.7rem; margin-bottom: 20px; opacity: 0.7;">ENCRYPTION UNIT</div>
+        <div class="header-label">VIBE PASSWORD</div>
         
         <div id="password-display" onclick="copyToClipboard()">GENERA</div>
 
@@ -92,7 +147,7 @@
             <div id="strength-bar"></div>
         </div>
         
-        <div id="crack-time">Tempo stimato: ---</div>
+        <div id="crack-time">Analisi in corso...</div>
 
         <div class="controls">
             <label>
@@ -103,7 +158,7 @@
         </div>
 
         <button onclick="generate()">Esegui Protocollo</button>
-        <div style="font-size: 0.6rem; margin-top: 15px; opacity: 0.4;">CLICCA SUL CODICE PER COPIARE</div>
+        <div class="hint">CLICCA SUL CODICE PER COPIARE</div>
     </div>
 
     <script>
@@ -114,13 +169,13 @@
             const display = document.getElementById('password-display');
             document.getElementById('length-val').innerText = val;
             
-            // AGGIUSTAMENTO DINAMICO DEL FONT
+            // Font dinamico ottimizzato
             if (val > 24) {
-                display.style.fontSize = "0.7rem";
-            } else if (val > 18) {
                 display.style.fontSize = "0.85rem";
-            } else {
+            } else if (val > 18) {
                 display.style.fontSize = "1rem";
+            } else {
+                display.style.fontSize = "1.2rem";
             }
 
             const bar = document.getElementById('strength-bar');
@@ -181,11 +236,11 @@
             if (text === "GENERA" || text === "COPIATA!") return;
             navigator.clipboard.writeText(text).then(() => {
                 const currentFontSize = display.style.fontSize;
-                display.style.fontSize = "1rem"; // Reset momentaneo per il feedback
+                display.style.fontSize = "1.1rem"; 
                 display.innerText = "COPIATA!";
                 setTimeout(() => { 
                     display.innerText = text; 
-                    display.style.fontSize = currentFontSize; // Ritorna alla dimensione corretta
+                    display.style.fontSize = currentFontSize;
                 }, 1000);
             });
         }
