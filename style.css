@@ -32,6 +32,7 @@ body.pink-theme {
 
 html {
     background-color: #050505; /* Impedisce le bande bianche durante lo scroll o il caricamento */
+    overscroll-behavior: none; /* Impedisce il rimbalzo elastico che mostra il bianco su iOS/Android */
 }
 
 * { 
@@ -41,14 +42,22 @@ html {
 }
 
 html, body {
-    width: 100%; 
-    min-height: 100dvh; /* Altezza dinamica che si adatta alle barre del browser mobile */
+    width: 100%;
+    /* Usiamo min-height invece di height per assicurarci che copra tutto */
+    min-height: 100dvh; 
+    margin: 0;
+    padding: 0;
     background: var(--bg-gradient);
-    background-attachment: fixed; /* Mantiene il gradiente fermo se la pagina dovesse scorrere */
+    /* Importante: fissa il gradiente così non si sposta se la tastiera si apre */
+    background-attachment: fixed; 
     font-family: var(--font-main);
     color: var(--primary);
-    overflow: hidden;
-    display: flex; justify-content: center; align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Impedisce lo scroll accidentale che causa le bande */
+    overflow: hidden; 
+    position: fixed; /* Blocca il body nella viewport del telefono */
     transition: background 0.5s ease, color 0.5s ease;
 }
 
