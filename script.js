@@ -139,6 +139,12 @@ function updateUI() {
         crackText.className = `visible`; 
         crackText.innerHTML = `<div>${randomMsg}</div><div style="font-size: 0.75rem; opacity: 0.8; margin-top: 4px;">Crack time: ${time}</div>`;
     }
+    // Aggiorna il colore della barra di stato del telefono
+const statusBar = document.getElementById('status-bar-color');
+if (statusBar) {
+    // Se il tema è pink, usa il rosa, altrimenti il verde
+    statusBar.content = document.body.classList.contains('pink-theme') ? "#ff00ff" : "#00ff41";
+}
 }
 
 /**
