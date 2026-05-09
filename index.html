@@ -2,27 +2,38 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">    <title>Vibe Password 2.0</title>
-<meta name="theme-color" id="status-bar-color" content="#00ff41">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Vibe Password 2.0</title>
+    
+    <meta name="theme-color" id="status-bar-color" content="#00ff41">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="VibePass">
+
+<link rel="icon" type="image/x-icon" href="assets/img/favicon_io/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon_io/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon_io/favicon-16x16.png">
+<link rel="apple-touch-icon" href="assets/img/favicon_io/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <main class="container" id="main-container">
-        
-        <button id="theme-switch" onclick="toggleTheme()" title="Cambia Vibe">◑</button>
-        <button id="info-btn" onclick="toggleStats(true)">i</button>
+        <button id="theme-switch" class="icon-btn" title="Cambia Vibe">◑</button>
+        <button id="info-btn" class="icon-btn" title="Analisi Tecnica">i</button>
 
         <h1 class="header-title">Vibe Password</h1>
         
-        <div id="password-display" role="button" aria-label="Copia password" onclick="copyToClipboard()">GENERA</div>
-<div id="copy-hint-container" class="hidden">
-    <span class="hint-text">CLICCA PER COPIARE</span>
-</div>
+        <div id="password-display" role="button" aria-label="Copia password" tabindex="0">GENERA</div>
+        <div id="copy-hint-container" class="hidden">
+            <span class="hint-text">CLICCA PER COPIARE</span>
+        </div>
+        
         <div class="strength-container">
             <div id="strength-bar"></div>
         </div>
-        
         <div id="crack-time">In attesa di input...</div>
 
         <section class="controls">
@@ -31,45 +42,48 @@
                     <span>LUNGHEZZA</span>
                     <span id="length-val">16</span>
                 </label>
-                <input type="range" id="length-slider" min="6" max="52" value="16" oninput="updateUI()">
+                <input type="range" id="length-slider" min="6" max="52" value="16">
             </div>
 
             <div class="options-grid">
                 <label class="option-item active">
-                    <input type="checkbox" id="opt-upper" checked onchange="handleToggle(this)">
+                    <input type="checkbox" id="opt-upper" checked>
                     <span class="option-label">ABC</span>
                 </label>
                 <label class="option-item active">
-                    <input type="checkbox" id="opt-lower" checked onchange="handleToggle(this)">
+                    <input type="checkbox" id="opt-lower" checked>
                     <span class="option-label">abc</span>
                 </label>
                 <label class="option-item active">
-                    <input type="checkbox" id="opt-numbers" checked onchange="handleToggle(this)">
+                    <input type="checkbox" id="opt-numbers" checked>
                     <span class="option-label">123</span>
                 </label>
                 <label class="option-item active">
-                    <input type="checkbox" id="opt-symbols" checked onchange="handleToggle(this)">
+                    <input type="checkbox" id="opt-symbols" checked>
                     <span class="option-label">$%&</span>
+                </label>
+                <label class="option-item">
+                    <input type="checkbox" id="opt-similar">
+                    <span class="option-label">ESCLUDI SIMILI</span>
                 </label>
             </div>
         </section>
 
-        <button type="button" class="main-generate" onclick="generate()">GENERA</button>
+        <button type="button" id="generate-btn" class="main-generate">GENERA</button>
     </main>
 
     <div id="stats-overlay" class="overlay">
         <div class="overlay-content">
-            <button class="close-btn" onclick="toggleStats(false)">×</button>
+            <button class="close-btn" id="close-stats-btn">×</button>
             <h2 style="margin-bottom: 20px; font-family: var(--font-ui); color: #fff;">Analisi Tecnica</h2>
-            
-            <div id="stats-data">
-                </div>
-            
+            <div id="stats-data"></div>
             <p class="stats-explanation">
-                La stima si basa su un attacco brute-force che testa 1.000 miliardi (1 trilione) di combinazioni al secondo.
+                Analisi crittografica basata su attacchi a 1 trilione di tentativi al secondo.
             </p>
         </div>
     </div>
+
+    <div id="toast-msg" class="toast-msg">Password copiata!</div>
 
     <script src="script.js"></script>
 </body>
